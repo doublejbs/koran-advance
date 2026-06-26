@@ -36,11 +36,11 @@ const AdBanner = () => {
       <span className="ad-banner__label">{t('ad')}</span>
       <ins
         className="adsbygoogle"
-        style={{ display: 'block' }}
+        style={{ display: 'block', width: '100%', height: '50px' }}
         data-ad-client={AD_CLIENT}
         data-ad-slot={AD_SLOT}
-        data-ad-format="auto"
-        data-full-width-responsive="true"
+        data-ad-format="horizontal"
+        data-full-width-responsive="false"
       />
     </aside>
   );
