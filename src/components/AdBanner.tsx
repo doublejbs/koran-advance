@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-// TODO: 애드센스 계정의 실제 값으로 교체하세요.
-// - AD_CLIENT 는 index.html 의 client 파라미터와 동일해야 합니다.
-const AD_CLIENT = 'ca-pub-XXXXXXXXXXXXXXXX';
+// AD_CLIENT 는 index.html 의 client 파라미터와 동일해야 한다.
+// TODO: AD_SLOT 은 애드센스에서 광고 단위를 만든 뒤 발급되는 슬롯 ID로 교체하세요.
+const AD_CLIENT = 'ca-pub-1953089301592534';
 const AD_SLOT = 'XXXXXXXXXX';
 
 declare global {
