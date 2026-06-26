@@ -1310,7 +1310,17 @@ table.standings tbody td {
   transition: transform 0.05s ease, border-color 0.15s ease;
 }
 
-/* 실패 확정(AlreadyAbove) 카드: 큰 X 표시 */
+/* 빙고처럼 상태별 배경색: 예정(노랑) · 성공/안전(초록) · 실패(빨강) */
+.gtile.is-swing .gtile__btn {
+  background: var(--contention-soft);
+  border-color: var(--contention-soft);
+}
+
+.gtile.is-below .gtile__btn {
+  background: var(--qualify-soft);
+  border-color: var(--qualify-soft);
+}
+
 .gtile.is-above .gtile__btn {
   background: var(--eliminate-soft);
   border-color: var(--eliminate-soft);
@@ -1352,7 +1362,7 @@ table.standings tbody td {
   font-size: 13px;
   font-weight: 800;
   color: var(--text);
-  background: var(--surface-2);
+  background: #ffffff;
   width: 30px;
   height: 30px;
   border-radius: 10px;
@@ -1361,26 +1371,25 @@ table.standings tbody td {
   justify-content: center;
 }
 
+/* 칩: 색칠된 카드 위에서 잘 보이도록 흰 배경 + 상태색 글자 */
 .gtile__chip {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   padding: 4px 9px;
   border-radius: 8px;
+  background: #ffffff;
 }
 
 .gtile.is-swing .gtile__chip {
   color: var(--contention);
-  background: var(--contention-soft);
 }
 
 .gtile.is-above .gtile__chip {
   color: var(--eliminate);
-  background: var(--eliminate-soft);
 }
 
 .gtile.is-below .gtile__chip {
   color: var(--qualify);
-  background: var(--qualify-soft);
 }
 
 .gtile__lines {
