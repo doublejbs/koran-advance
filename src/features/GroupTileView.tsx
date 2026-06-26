@@ -37,6 +37,7 @@ const GroupTileView = (props: GroupTileViewProps) => {
 
   const isSwing = condition.state === RivalGroupState.Swing;
   const isAbove = condition.state === RivalGroupState.AlreadyAbove;
+  const isBelow = !isSwing && !isAbove;
 
   const favorable = useMemo<Map<string, MatchOutcome>>(() => {
     if (!supportedStanding || !isSwing) {
@@ -112,6 +113,16 @@ const GroupTileView = (props: GroupTileViewProps) => {
           >
             <line x1="10" y1="10" x2="90" y2="90" />
             <line x1="90" y1="10" x2="10" y2="90" />
+          </svg>
+        ) : null}
+        {isBelow ? (
+          <svg
+            className="gtile__omark"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <ellipse cx="50" cy="50" rx="42" ry="42" fill="none" />
           </svg>
         ) : null}
         <span className="gtile__top">
