@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Match, Standing, Team, ThirdPlaceRow } from '../domain/Models';
 import { MatchStatus } from '../domain/MatchStatus';
@@ -7,7 +7,8 @@ import {
   QualificationConditions,
   analyzeQualificationConditions,
 } from '../domain/QualificationConditions';
-import GroupThreatCardView from './GroupThreatCardView';
+import GroupTileView from './GroupTileView';
+import ScenarioSheetView from './ScenarioSheetView';
 
 interface GroupThreatBoardViewProps {
   supportedTeamId: string | null;
@@ -42,6 +43,16 @@ const GroupThreatBoardView = (props: GroupThreatBoardViewProps) => {
     teamById,
   } = props;
   const { t, i18n } = useTranslation();
+
+  const [openGroupKey, setOpenGroupKey] = useState<string | null>(null);
+
+  const handleOpenGroup = (group: string) => {
+    setOpenGroupKey(group);
+  };
+
+  const handleCloseSheet = () => {
+    setOpenGroupKey(null);
+  };
 
   const conditions = useMemo<QualificationConditions>(() => {
     if (!supportedTeamId || matches.length === 0) {
@@ -126,6 +137,10 @@ const GroupThreatBoardView = (props: GroupThreatBoardViewProps) => {
 
   const maxAllowedAbove = thirdPlaceTotal > 0 ? Math.min(8, thirdPlaceTotal) - 1 : 7;
 
+  const openCondition = openGroupKey
+    ? (conditions.rivalGroups.find((item) => item.group === openGroupKey) ?? null)
+    : null;
+
   if (isAutoQualified) {
     return (
       <section className="threat">
@@ -170,21 +185,33 @@ const GroupThreatBoardView = (props: GroupThreatBoardViewProps) => {
         </p>
       </div>
 
-      <ul className="threat-card-list">
+      <ul className="group-grid">
         {sortedRivalGroups.map((condition) => (
-          <GroupThreatCardView
+          <GroupTileView
             key={condition.group}
             condition={condition}
-            teamById={teamById}
             groupMatches={matchesByGroup.get(condition.group) ?? []}
             groupTeams={teamsByGroup.get(condition.group) ?? []}
             supportedStanding={supportedStanding}
-            matches={matches}
-            teams={teams}
-            supportedTeamId={supportedTeamId}
+            teamById={teamById}
+            onOpen={handleOpenGroup}
           />
         ))}
       </ul>
+
+      {openCondition ? (
+        <ScenarioSheetView
+          condition={openCondition}
+          groupMatches={matchesByGroup.get(openCondition.group) ?? []}
+          groupTeams={teamsByGroup.get(openCondition.group) ?? []}
+          supportedStanding={supportedStanding}
+          teamById={teamById}
+          matches={matches}
+          teams={teams}
+          supportedTeamId={supportedTeamId}
+          onClose={handleCloseSheet}
+        />
+      ) : null}
     </section>
   );
 };

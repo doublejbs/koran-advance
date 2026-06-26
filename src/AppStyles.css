@@ -1277,3 +1277,197 @@ table.standings tbody td {
   max-height: 50px !important;
   overflow: hidden;
 }
+
+/* 진출 조건 — 조별 격자 타일 */
+.group-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.gtile {
+  display: flex;
+}
+
+.gtile__btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  cursor: pointer;
+  transition: transform 0.05s ease, border-color 0.15s ease;
+}
+
+.gtile__btn:hover {
+  border-color: var(--border-strong);
+}
+
+.gtile__btn:active {
+  transform: scale(0.98);
+}
+
+.gtile__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 6px;
+}
+
+.gtile__group {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+  background: var(--surface-2);
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gtile__chip {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 8px;
+}
+
+.gtile.is-swing .gtile__chip {
+  color: var(--contention);
+  background: var(--contention-soft);
+}
+
+.gtile.is-above .gtile__chip {
+  color: var(--eliminate);
+  background: var(--eliminate-soft);
+}
+
+.gtile.is-below .gtile__chip {
+  color: var(--qualify);
+  background: var(--qualify-soft);
+}
+
+.gtile__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+}
+
+.gtile__line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.gtile__lineflags {
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: 1px;
+  flex: 0 0 auto;
+}
+
+.gtile__lineresult {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gtile.is-above .gtile__lineresult {
+  color: var(--eliminate);
+}
+
+.gtile.is-below .gtile__lineresult {
+  color: var(--text-dim);
+}
+
+/* 바텀시트 */
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(20, 30, 50, 0.45);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: sheet-fade 0.18s ease;
+}
+
+.sheet {
+  width: 100%;
+  max-width: 460px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--bg);
+  border-radius: 22px 22px 0 0;
+  padding: 8px 16px calc(20px + env(safe-area-inset-bottom, 0px));
+  animation: sheet-up 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sheet__handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-strong);
+  margin: 4px auto 10px;
+}
+
+.sheet__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.sheet__title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.sheet__close {
+  font-size: 15px;
+  color: var(--text-dim);
+  background: var(--surface-2);
+  border: none;
+  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+@keyframes sheet-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
