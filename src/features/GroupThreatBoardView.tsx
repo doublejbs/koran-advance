@@ -80,29 +80,42 @@ const GroupThreatBoardView = (props: GroupThreatBoardViewProps) => {
   }, [matches]);
 
   const sortedRivalGroups = useMemo(() => {
-    // 곧 열리는 순: 그 조의 가장 빠른 예정/진행 경기 kickoff(오름차순). 잔여 경기 없으면 맨 뒤로.
-    const nextKickoff = (group: string): number => {
+    // 날짜 빠른순: 잔여 경기가 있으면 가장 빠른 예정/진행 경기,
+    // 없으면(실패·안전 확정 등) 그 조의 마지막 경기 날짜 기준. 실패 조도 날짜로 섞이게 한다.
+    const sortKey = (group: string): number => {
       const groupMatches = matchesByGroup.get(group) ?? [];
 
-      return groupMatches.reduce((min, match) => {
-        if (match.status !== MatchStatus.Scheduled && match.status !== MatchStatus.Live) {
-          return min;
-        }
+      let pendingMin = Number.POSITIVE_INFINITY;
+      let anyMax = Number.NEGATIVE_INFINITY;
 
+      groupMatches.forEach((match) => {
         const time = new Date(match.kickoff).getTime();
 
         if (Number.isNaN(time)) {
-          return min;
+          return;
         }
 
-        return time < min ? time : min;
-      }, Number.POSITIVE_INFINITY);
+        if (match.status === MatchStatus.Scheduled || match.status === MatchStatus.Live) {
+          pendingMin = Math.min(pendingMin, time);
+        }
+
+        anyMax = Math.max(anyMax, time);
+      });
+
+      if (pendingMin !== Number.POSITIVE_INFINITY) {
+        return pendingMin;
+      }
+
+      if (anyMax !== Number.NEGATIVE_INFINITY) {
+        return anyMax;
+      }
+
+      return Number.POSITIVE_INFINITY;
     };
 
     return [...conditions.rivalGroups].sort((a, b) => {
-      const diff = nextKickoff(a.group) - nextKickoff(b.group);
+      const diff = sortKey(a.group) - sortKey(b.group);
 
-      // 둘 다 잔여 경기 없음(Infinity)이면 diff 가 NaN → 조 이름순으로 폴백.
       if (diff !== 0 && !Number.isNaN(diff)) {
         return diff;
       }
