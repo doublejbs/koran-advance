@@ -76,6 +76,7 @@ export const En = {
     threatLockedTopTwo: '{{teams}} locked top-2',
     tileSafe: 'Safe',
     tileUnfavorable: 'Tough',
+    tileFailed: 'Lost',
     sheetClose: 'Close',
 
     // conditions — per-result standings preview

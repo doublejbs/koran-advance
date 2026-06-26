@@ -1293,6 +1293,8 @@ table.standings tbody td {
 }
 
 .gtile__btn {
+  position: relative;
+  overflow: hidden;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -1306,6 +1308,28 @@ table.standings tbody td {
   padding: 14px;
   cursor: pointer;
   transition: transform 0.05s ease, border-color 0.15s ease;
+}
+
+/* 실패 확정(AlreadyAbove) 카드: 큰 X 표시 */
+.gtile.is-above .gtile__btn {
+  background: var(--eliminate-soft);
+  border-color: var(--eliminate-soft);
+}
+
+.gtile__xmark {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.gtile__xmark line {
+  stroke: var(--eliminate);
+  stroke-width: 5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
 }
 
 .gtile__btn:hover {

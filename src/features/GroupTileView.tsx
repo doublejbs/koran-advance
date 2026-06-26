@@ -88,13 +88,13 @@ const GroupTileView = (props: GroupTileViewProps) => {
             result: isSwing
               ? t('threatSwing')
               : isAbove
-                ? t('tileUnfavorable')
+                ? t('tileFailed')
                 : t('tileSafe'),
           },
         ];
 
   const toneClass = isSwing ? 'is-swing' : isAbove ? 'is-above' : 'is-below';
-  const chipLabel = isSwing ? t('threatSwing') : isAbove ? t('threatAbove') : t('threatBelow');
+  const chipLabel = isSwing ? t('threatSwing') : isAbove ? t('tileFailed') : t('threatBelow');
 
   const handleClick = () => {
     onOpen(condition.group);
@@ -103,6 +103,17 @@ const GroupTileView = (props: GroupTileViewProps) => {
   return (
     <li className={`gtile ${toneClass}`}>
       <button type="button" className="gtile__btn" onClick={handleClick}>
+        {isAbove ? (
+          <svg
+            className="gtile__xmark"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <line x1="10" y1="10" x2="90" y2="90" />
+            <line x1="90" y1="10" x2="10" y2="90" />
+          </svg>
+        ) : null}
         <span className="gtile__top">
           <span className="gtile__group">{condition.group}</span>
           <span className="gtile__chip">{chipLabel}</span>
