@@ -1,12 +1,18 @@
 import { useTranslation } from 'react-i18next';
-import { Team } from '../domain/Models';
-import { MatchOutcome } from '../domain/MatchOutcome';
+import { Match, Standing, Team } from '../domain/Models';
 import { RivalGroupState } from '../domain/RivalGroupState';
-import { MatchHint, RivalGroupCondition } from '../domain/QualificationConditions';
+import { RivalGroupCondition } from '../domain/QualificationConditions';
+import RivalScenarioView from './RivalScenarioView';
 
 interface GroupThreatCardViewProps {
   condition: RivalGroupCondition;
   teamById: Map<string, Team>;
+  groupMatches: Match[];
+  groupTeams: Team[];
+  supportedStanding: Standing | null;
+  matches: Match[];
+  teams: Team[];
+  supportedTeamId: string | null;
 }
 
 interface VerdictChipMeta {
@@ -31,7 +37,16 @@ const resolveChipMeta = (
 
 /** 한 라이벌 조의 3위 경쟁 상태 카드. */
 const GroupThreatCardView = (props: GroupThreatCardViewProps) => {
-  const { condition, teamById } = props;
+  const {
+    condition,
+    teamById,
+    groupMatches,
+    groupTeams,
+    supportedStanding,
+    matches,
+    teams,
+    supportedTeamId,
+  } = props;
   const { t, i18n } = useTranslation();
 
   const isEn = i18n.language === 'en';
@@ -52,16 +67,6 @@ const GroupThreatCardView = (props: GroupThreatCardViewProps) => {
 
   const teamTag = (teamId: string): string => {
     return `${flagOf(teamId)} ${nameOf(teamId)}`;
-  };
-
-  const resultLabelOf = (hint: MatchHint, outcome: MatchOutcome): string => {
-    if (outcome === MatchOutcome.Draw) {
-      return t('draw');
-    }
-
-    const teamId = outcome === MatchOutcome.HomeWin ? hint.homeId : hint.awayId;
-
-    return t('teamWin', { team: nameOf(teamId) });
   };
 
   const chip = resolveChipMeta(condition.state, t);
@@ -93,25 +98,16 @@ const GroupThreatCardView = (props: GroupThreatCardViewProps) => {
       </div>
 
       {isSwing ? (
-        <ul className="threat-hints">
-          {condition.hints.map((hint) => {
-            const matchup = `${nameOf(hint.homeId)} vs ${nameOf(hint.awayId)}`;
-
-            const text =
-              hint.favorable !== null
-                ? t('threatHintFavorable', {
-                    matchup,
-                    result: resultLabelOf(hint, hint.favorable),
-                  })
-                : t('threatHintConditional', { matchup });
-
-            return (
-              <li key={hint.matchId} className="threat-hint">
-                {text}
-              </li>
-            );
-          })}
-        </ul>
+        <RivalScenarioView
+          condition={condition}
+          groupMatches={groupMatches}
+          groupTeams={groupTeams}
+          supportedStanding={supportedStanding}
+          teamById={teamById}
+          matches={matches}
+          teams={teams}
+          supportedTeamId={supportedTeamId}
+        />
       ) : (
         <p className="threat-card__note">
           {hasPending

@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { rankThirdPlaceTeams, selectThirdPlacedStandings } from './ThirdPlace';
-import { makeTeam, makeThirdStanding } from './TestHelpers';
+import {
+  projectThirdPlaceRanking,
+  rankThirdPlaceTeams,
+  selectThirdPlacedStandings,
+} from './ThirdPlace';
+import { makeMatch, makeTeam, makeThirdStanding } from './TestHelpers';
+import { MatchOutcome } from './MatchOutcome';
+import { MatchStatus } from './MatchStatus';
 import { Standing } from './Models';
 
 describe('rankThirdPlaceTeams', () => {
@@ -61,5 +67,61 @@ describe('selectThirdPlacedStandings', () => {
 
     expect(thirds.map((s) => s.teamId).sort()).toEqual(['A3', 'B3']);
     expect(thirds.every((s) => s.rankInGroup === 3)).toBe(true);
+  });
+});
+
+// A조: 전부 종료(A3 = 1점 3위). B조: B3 vs B4 만 잔여.
+const buildTwoGroups = () => {
+  const teams = [
+    makeTeam('A1', 'A', 1),
+    makeTeam('A2', 'A', 2),
+    makeTeam('A3', 'A', 3),
+    makeTeam('A4', 'A', 4),
+    makeTeam('B1', 'B', 10),
+    makeTeam('B2', 'B', 20),
+    makeTeam('B3', 'B', 30),
+    makeTeam('B4', 'B', 40),
+  ];
+  const pending = makeMatch('B', 'B3', 'B4', 0, 0, MatchStatus.Scheduled);
+  const matches = [
+    makeMatch('A', 'A1', 'A2', 1, 0),
+    makeMatch('A', 'A1', 'A3', 1, 0),
+    makeMatch('A', 'A1', 'A4', 1, 0),
+    makeMatch('A', 'A2', 'A3', 1, 0),
+    makeMatch('A', 'A2', 'A4', 1, 0),
+    makeMatch('A', 'A3', 'A4', 0, 0), // A3·A4 무 → A3 1점(FIFA 우위로 3위)
+    makeMatch('B', 'B1', 'B2', 1, 0),
+    makeMatch('B', 'B1', 'B3', 1, 0),
+    makeMatch('B', 'B1', 'B4', 1, 0),
+    makeMatch('B', 'B2', 'B3', 1, 0),
+    makeMatch('B', 'B2', 'B4', 1, 0),
+    pending,
+  ];
+
+  return { teams, matches, pendingId: pending.id };
+};
+
+describe('projectThirdPlaceRanking', () => {
+  it('override 없으면 현재 결과로 전체 3위 순위를 매긴다', () => {
+    const { teams, matches } = buildTwoGroups();
+
+    const rows = projectThirdPlaceRanking(matches, teams, new Map());
+
+    // A3(1점) > B3(0점)
+    expect(rows.map((r) => r.teamId)).toEqual(['A3', 'B3']);
+    expect(rows.map((r) => r.thirdPlaceRank)).toEqual([1, 2]);
+  });
+
+  it('B3 승 가정 → B3(3점)가 전체 3위 순위에서 A3(1점) 위로 올라간다', () => {
+    const { teams, matches, pendingId } = buildTwoGroups();
+
+    const rows = projectThirdPlaceRanking(
+      matches,
+      teams,
+      new Map([[pendingId, MatchOutcome.HomeWin]]),
+    );
+
+    expect(rows.map((r) => r.teamId)).toEqual(['B3', 'A3']);
+    expect(rows[0].thirdPlaceRank).toBe(1);
   });
 });

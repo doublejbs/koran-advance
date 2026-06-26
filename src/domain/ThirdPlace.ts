@@ -1,4 +1,7 @@
-import { Standing, Team, ThirdPlaceRow } from './Models';
+import { Match, Standing, Team, ThirdPlaceRow } from './Models';
+import { MatchOutcome } from './MatchOutcome';
+import { applyScenario } from './Scenario';
+import { computeAllGroupStandings } from './Standings';
 
 /**
  * 조별 순위표 맵에서 각 조 3위(rankInGroup === 3) Standing 을 추출한다.
@@ -86,4 +89,21 @@ export const rankThirdPlaceTeams = (
       qualifies: thirdPlaceRank <= 8,
     };
   });
+};
+
+/**
+ * 가정 결과(overrides)를 전체 경기에 적용한 뒤, 전체 조 3위 순위표를 다시 매긴다.
+ * - applyScenario → computeAllGroupStandings → selectThirdPlacedStandings → rankThirdPlaceTeams 조합.
+ * - "결과별 전체 3위 순위 미리보기"에 사용.
+ */
+export const projectThirdPlaceRanking = (
+  matches: Match[],
+  teams: Team[],
+  overrides: Map<string, MatchOutcome>,
+): ThirdPlaceRow[] => {
+  const scenarioMatches = applyScenario(matches, overrides);
+  const standingsByGroup = computeAllGroupStandings(scenarioMatches, teams);
+  const thirds = selectThirdPlacedStandings(standingsByGroup);
+
+  return rankThirdPlaceTeams(thirds, teams);
 };

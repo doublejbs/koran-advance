@@ -439,3 +439,113 @@ export const analyzeQualificationConditions = (
     rivalGroups,
   };
 };
+
+/** 가정 결과를 적용한 한 라이벌 조의 투영 결과. */
+export interface RivalScenarioProjection {
+  standings: Standing[]; // 가정 결과를 반영한 그 조 정렬 순위표
+  thirdTeamId: string | null; // 그 조 3위 팀 id
+  thirdIsAboveSupported: boolean; // 그 조 3위가 우리(supportedRecord)보다 위(불리)면 true
+}
+
+/**
+ * 한 라이벌 조에 가정 결과(overrides)를 적용한 순위표와, 그 조 3위가 우리(supportedRecord)
+ * 보다 위인지(불리)를 투영한다. "결과별 순위 미리보기"에 사용.
+ * - applyScenario + computeGroupStandings 조합, 비교는 3위표와 동일 기준(compareThirdPlaceRecords).
+ */
+export const projectRivalScenario = (
+  supportedRecord: Standing,
+  groupMatches: Match[],
+  groupTeams: Team[],
+  teamsById: Map<string, Team>,
+  overrides: Map<string, MatchOutcome>,
+): RivalScenarioProjection => {
+  const scenarioMatches = applyScenario(groupMatches, overrides);
+  const standings = computeGroupStandings(scenarioMatches, groupTeams);
+  const third = standings.find((standing) => standing.rankInGroup === 3) ?? null;
+
+  const thirdIsAboveSupported = third
+    ? compareThirdPlaceRecords(third, supportedRecord, teamsById) < 0
+    : false;
+
+  return {
+    standings,
+    thirdTeamId: third ? third.teamId : null,
+    thirdIsAboveSupported,
+  };
+};
+
+/**
+ * 응원국에 가장 유리한(그 조 3위가 우리 아래로 가는) 잔여 경기 결과 조합을 찾는다.
+ * - 각 경기는 개별적으로 유리(Favorable) → 무 → Conditional → Unfavorable 순으로 우선 시도.
+ * - 그 우선순위로 enumerate 해, 그 조 3위가 우리보다 아래가 되는 첫 조합을 반환.
+ * - 유리한 조합이 없으면(어떤 결과든 위) 빈 Map.
+ */
+export const findFavorableScenario = (
+  supportedRecord: Standing,
+  groupMatches: Match[],
+  groupTeams: Team[],
+  teamsById: Map<string, Team>,
+  hints: MatchHint[],
+): Map<string, MatchOutcome> => {
+  const pending = groupMatches.filter(
+    (match) => match.status === MatchStatus.Scheduled || match.status === MatchStatus.Live,
+  );
+
+  if (pending.length === 0) {
+    return new Map();
+  }
+
+  // 경기별로 우리에게 유리한 정도 순으로 결과를 정렬(우선 시도 순서).
+  const preferenceScore = (hint: MatchHint | undefined, outcome: MatchOutcome): number => {
+    const effect = hint?.outcomes.find((verdict) => verdict.outcome === outcome)?.effect;
+
+    if (effect === OutcomeEffect.Favorable) {
+      return 0;
+    }
+
+    if (outcome === MatchOutcome.Draw) {
+      return 1;
+    }
+
+    if (effect === OutcomeEffect.Conditional) {
+      return 2;
+    }
+
+    return 3;
+  };
+
+  const orderedOutcomes = pending.map((match) => {
+    const hint = hints.find((item) => item.matchId === match.id);
+
+    return [...ALL_OUTCOMES].sort((a, b) => preferenceScore(hint, a) - preferenceScore(hint, b));
+  });
+
+  const total = 3 ** pending.length;
+
+  for (let combo = 0; combo < total; combo += 1) {
+    let remainder = combo;
+    const overrides = new Map<string, MatchOutcome>();
+
+    pending.forEach((match, index) => {
+      const outcome = orderedOutcomes[index][remainder % 3];
+
+      remainder = Math.floor(remainder / 3);
+
+      overrides.set(match.id, outcome);
+    });
+
+    const projection = projectRivalScenario(
+      supportedRecord,
+      groupMatches,
+      groupTeams,
+      teamsById,
+      overrides,
+    );
+
+    if (!projection.thirdIsAboveSupported) {
+      return overrides;
+    }
+  }
+
+  return new Map();
+};
