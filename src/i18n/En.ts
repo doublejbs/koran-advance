@@ -74,6 +74,9 @@ export const En = {
     threatNoteAlwaysBelow: 'Below us under any result',
     threatNoteSettled: 'Settled',
     threatLockedTopTwo: '{{teams}} locked top-2',
+    tileSafe: 'Safe',
+    tileUnfavorable: 'Tough',
+    sheetClose: 'Close',
 
     // conditions — per-result standings preview
     scenarioHint: 'Set to best case · tap to change',

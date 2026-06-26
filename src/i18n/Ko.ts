@@ -74,6 +74,9 @@ export const Ko = {
     threatNoteAlwaysBelow: '어떤 결과든 우리보다 아래',
     threatNoteSettled: '확정',
     threatLockedTopTwo: '{{teams}} 2위 이상 확정',
+    tileSafe: '안전',
+    tileUnfavorable: '불리',
+    sheetClose: '닫기',
 
     // 진출 조건 — 결과별 순위 미리보기
     scenarioHint: '유리한 결과로 세팅됨 · 눌러서 변경',
