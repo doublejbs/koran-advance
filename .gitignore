@@ -10,3 +10,6 @@ dist/
 
 # OS
 .DS_Store
+
+# 로컬 도구 설정 (Claude Code preview 등)
+.claude/

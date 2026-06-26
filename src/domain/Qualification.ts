@@ -2,6 +2,7 @@ import { Match, Team } from './Models';
 import { MatchOutcome } from './MatchOutcome';
 import { MatchStatus } from './MatchStatus';
 import { QualificationStatus } from './QualificationStatus';
+import { applyScenario } from './Scenario';
 import { computeAllGroupStandings } from './Standings';
 import { rankThirdPlaceTeams, selectThirdPlacedStandings } from './ThirdPlace';
 
@@ -78,6 +79,37 @@ const ALL_OUTCOMES: MatchOutcome[] = [
   MatchOutcome.AwayWin,
   MatchOutcome.Draw,
 ];
+
+/**
+ * 주어진 시나리오에서 응원국의 "유리함 점수"(작을수록 유리). greedy 선택에 사용.
+ * - 3위 그룹에 있으면 그 3위표 순위(낮을수록 유리)를 점수로 쓴다.
+ * - 조 1·2위(자동진출)이면 0(가장 유리). 3위 그룹 밖(4위 등)이면 매우 큰 값.
+ */
+const supportedThirdRank = (
+  supportedTeamId: string,
+  matches: Match[],
+  teams: Team[],
+): number => {
+  const standingsByGroup = computeAllGroupStandings(matches, teams);
+  const supportedTeam = teams.find((team) => team.id === supportedTeamId);
+
+  if (!supportedTeam) {
+    return Number.MAX_SAFE_INTEGER;
+  }
+
+  const ownStanding = standingsByGroup
+    .get(supportedTeam.group)
+    ?.find((item) => item.teamId === supportedTeamId);
+
+  if (ownStanding && ownStanding.rankInGroup <= 2) {
+    return 0;
+  }
+
+  const thirdRows = rankThirdPlaceTeams(selectThirdPlacedStandings(standingsByGroup), teams);
+  const row = thirdRows.find((item) => item.teamId === supportedTeamId);
+
+  return row ? row.thirdPlaceRank : Number.MAX_SAFE_INTEGER - 1;
+};
 
 /**
  * 응원국의 진출 판정에 실제로 영향을 줄 수 있는 잔여 경기들을 추린다.
@@ -270,4 +302,92 @@ export const findRelevantMatches = (
   return collectRelevantMatches(supportedTeamId, pending, teams, finished).map(
     (match) => match.id,
   );
+};
+
+/**
+ * 응원국이 진출하게 되는 잔여 경기 결과 조합을 하나 찾는다("이런 결과면 진출" 예시).
+ *
+ * - 반환: 관련 잔여 경기 id → 가정 결과(MatchOutcome) 매핑.
+ *   - 이미 진출 확정/조건 불필요(조 1·2위 등)면 빈 Map.
+ *   - 어떤 조합으로도 진출 불가(탈락 확정)면 null.
+ * - 관련 경기로 범위를 좁혀(collectRelevantMatches) 탐색한다. 조합 수가 한도(MAX_COMBINATIONS)
+ *   이내면 전수 탐색으로 진출하는 첫 조합을 반환, 초과 시 경기별 greedy 로 근사한 조합을 시도한다.
+ */
+export const findQualifyingScenario = (
+  supportedTeamId: string,
+  matches: Match[],
+  teams: Team[],
+): Map<string, MatchOutcome> | null => {
+  const pending = scheduledMatches(matches);
+
+  // 잔여 경기가 없으면 현재 순위표로 결정적. 진출이면 빈 Map, 아니면 null.
+  if (pending.length === 0) {
+    return qualifiesInScenario(supportedTeamId, matches, teams) ? new Map() : null;
+  }
+
+  const finished = nonScheduledMatches(matches);
+  const relevant = collectRelevantMatches(supportedTeamId, pending, teams, finished);
+
+  // 관련(영향) 경기가 없으면 잔여 결과와 무관하게 현재 상태로 진출 여부가 정해진다.
+  if (relevant.length === 0) {
+    return qualifiesInScenario(supportedTeamId, matches, teams) ? new Map() : null;
+  }
+
+  const relevantIds = new Set(relevant.map((match) => match.id));
+  const baseMatches = matches.filter((match) => !relevantIds.has(match.id));
+
+  // 조합 수가 한도 이내면 전수 탐색으로 진출하는 첫 조합을 찾는다.
+  if (3 ** relevant.length <= MAX_COMBINATIONS) {
+    const total = 3 ** relevant.length;
+
+    for (let combo = 0; combo < total; combo += 1) {
+      let remainder = combo;
+      const overrides = new Map<string, MatchOutcome>();
+      const resolved = relevant.map((match) => {
+        const outcome = ALL_OUTCOMES[remainder % 3];
+
+        remainder = Math.floor(remainder / 3);
+
+        overrides.set(match.id, outcome);
+
+        return matchWithOutcome(match, outcome);
+      });
+
+      const scenarioMatches = [...baseMatches, ...resolved];
+
+      if (qualifiesInScenario(supportedTeamId, scenarioMatches, teams)) {
+        return overrides;
+      }
+    }
+
+    return null;
+  }
+
+  // 한도 초과: 경기별 greedy — 각 관련 경기를 응원국 3위 순위가 가장 좋아지는 결과로 누적한다.
+  const greedy = new Map<string, MatchOutcome>();
+
+  relevant.forEach((match) => {
+    let best = ALL_OUTCOMES[0];
+    let bestRank = Number.MAX_SAFE_INTEGER;
+
+    ALL_OUTCOMES.forEach((outcome) => {
+      const trial = new Map(greedy);
+
+      trial.set(match.id, outcome);
+
+      const scenarioMatches = applyScenario(matches, trial);
+      const rank = supportedThirdRank(supportedTeamId, scenarioMatches, teams);
+
+      if (rank < bestRank) {
+        bestRank = rank;
+        best = outcome;
+      }
+    });
+
+    greedy.set(match.id, best);
+  });
+
+  const greedyMatches = applyScenario(matches, greedy);
+
+  return qualifiesInScenario(supportedTeamId, greedyMatches, teams) ? greedy : null;
 };

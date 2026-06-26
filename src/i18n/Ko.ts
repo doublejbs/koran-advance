@@ -54,45 +54,28 @@ export const Ko = {
     tabStandings: '순위표',
     tabConditions: '진출 조건',
 
-    // 진출 조건 보드 — 헤드라인
-    boardAutoQualified: '이미 진출 (조 1·2위)',
-    boardAutoQualifiedDesc: '조에서 1위 또는 2위를 확정해 32강에 직행합니다.',
-    boardNotThird: '조 3위가 아니어서 3위 경합 대상이 아닙니다',
-    boardNotThirdDesc: '조 3위가 되어야 와일드카드(상위 8개 3위) 경합에 들어갑니다.',
-    boardClinched: '진출 확정',
-    boardClinchedDesc: '남은 어떤 결과에도 3위 상위 8위 안에 듭니다.',
-    boardEliminated: '탈락 확정',
-    boardEliminatedDesc: '이미 우리보다 위가 확정된 3위팀이 8팀 이상이라 진출이 불가능합니다.',
-    boardContending: '경합 중',
-    boardMagicNumber:
-      '우리보다 위 확정 {{locked}}팀 · 변수 {{swing}}개 조 중 {{allowed}}개까지 우리 위로 올라와도 진출',
-    boardMagicNumberHint: '= 적어도 {{need}}개 조에서 우리가 원하는 결과가 나오면 진출',
-
-    // 진출 조건 보드 — 카드
-    boardSwingTitle: '응원 조건',
-    boardSwingSubtitle: '아래 조들의 3위가 우리 아래로 내려가야 유리합니다',
-    boardCurrentThird: '현재 3위',
-    boardCardHint: '이 조 3위가 우리 아래로 내려가야 유리',
-
-    // 진출 조건 보드 — 요약
-    boardLockedAbove: '우리보다 위 확정: {{groups}} ({{count}}팀)',
-    boardSafeBelow: '영향 없음(안전): {{groups}} ({{count}}조)',
-    boardNoSwingGroups: '결과에 따라 갈리는 조가 없습니다',
-
-    // 경기 결과 응원 표기
-    rootFor: '이 결과 응원: {{result}}',
+    // 경기 결과 라벨
     teamWin: '{{team}} 승',
-    draw: '무승부',
-    effectFavorable: '유리',
-    effectUnfavorable: '불리',
-    effectConditional: '다른 경기 결과에 따라',
+    draw: '무',
 
-    // 케이스 미리보기
-    previewHeader: '{{result}} 시 — {{team}} {{rank}}위 · {{verdict}}',
-    previewHeaderNoRank: '{{result}} 시 — {{team}} 3위 아님',
-    verdictQualify: '진출권',
-    verdictEliminate: '탈락권',
-    close: '닫기',
+    // 진출 조건 — 조별 3위 경쟁
+    threatAutoQualifiedDesc: '조 1·2위로 32강에 직행합니다.',
+    threatNotThird: '직접 진출 불가',
+    threatNotThirdDesc: '조 3위가 되어야 와일드카드(상위 8개 3위) 경합에 들어갑니다.',
+    threatMyRank: '3위 그룹 {{rank}}위 / {{total}}',
+    threatSummaryLine:
+      '우리 위로 오는 다른 조 3위가 {{max}}팀 이하면 진출 · 위 확정 {{locked}}팀 · 변수 {{swing}}팀',
+    threatThird: '3위:',
+    threatThirdRace: '3위 경쟁:',
+    threatAbove: '우리보다 위',
+    threatBelow: '우리보다 아래',
+    threatSwing: '결과에 따라',
+    threatHintFavorable: '{{matchup}}: {{result}}면 우리 아래',
+    threatHintConditional: '{{matchup}}: 결과 조합에 따라',
+    threatNoteAlwaysAbove: '어떤 결과든 우리보다 위',
+    threatNoteAlwaysBelow: '어떤 결과든 우리보다 아래',
+    threatNoteSettled: '확정',
+    threatLockedTopTwo: '{{teams}} 2위 이상 확정',
 
     // 광고
     ad: '광고',

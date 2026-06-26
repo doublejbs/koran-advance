@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { evaluateQualification } from './Qualification';
+import { evaluateQualification, findQualifyingScenario } from './Qualification';
 import { QualificationStatus } from './QualificationStatus';
 import { makeTeam, makeMatch } from './TestHelpers';
 
@@ -47,5 +47,31 @@ describe('evaluateQualification - 결정된(전 경기 종료) 상태', () => {
 
     // 단일 조이므로 3위 팀(A3)은 3위 순위표에서 1위 → 상위 8 이내
     expect(evaluateQualification('A3', matches, teams)).toBe(QualificationStatus.Clinched);
+  });
+});
+
+describe('findQualifyingScenario', () => {
+  it('이미 진출 상태(조 1위)면 조건이 필요 없어 빈 Map 을 반환', () => {
+    const { teams, matches } = finishedGroup();
+
+    const scenario = findQualifyingScenario('A1', matches, teams);
+
+    expect(scenario).not.toBeNull();
+    expect(scenario!.size).toBe(0);
+  });
+
+  it('조 3위(단일 조)도 이미 진출 가능 → 빈 Map', () => {
+    const { teams, matches } = finishedGroup();
+
+    const scenario = findQualifyingScenario('A3', matches, teams);
+
+    expect(scenario).not.toBeNull();
+    expect(scenario!.size).toBe(0);
+  });
+
+  it('어떤 결과로도 진출 불가(조 4위)면 null 을 반환', () => {
+    const { teams, matches } = finishedGroup();
+
+    expect(findQualifyingScenario('A4', matches, teams)).toBeNull();
   });
 });

@@ -12,7 +12,7 @@ import TeamSelectView from './TeamSelectView';
 import StatusBannerView from './StatusBannerView';
 import ThirdPlaceTableView from './ThirdPlaceTableView';
 import LiveMatchesView from './LiveMatchesView';
-import QualificationBoardView from './QualificationBoardView';
+import GroupThreatBoardView from './GroupThreatBoardView';
 import { AppTab } from './AppTab';
 
 const formatTime = (date: Date, lang: string): string => {
@@ -152,8 +152,11 @@ const App = () => {
             <LiveMatchesView matches={matches} teamById={TEAM_BY_ID} />
           </>
         ) : (
-          <QualificationBoardView
+          <GroupThreatBoardView
             supportedTeamId={supportedTeamId}
+            supportedStanding={supportedStanding}
+            supportedThirdRow={supportedThirdRow}
+            thirdPlaceTotal={thirdPlaceRows.length}
             matches={matches}
             teams={teams}
             teamById={TEAM_BY_ID}

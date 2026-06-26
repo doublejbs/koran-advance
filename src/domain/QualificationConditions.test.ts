@@ -80,6 +80,19 @@ describe('classifyRivalGroup', () => {
     ]);
   });
 
+  it('lockedTopTwoTeamIds 는 항상 1·2위인 팀, thirdCandidateTeamIds 는 3위 후보 팀', () => {
+    const { groupTeams, groupMatches, teamsById } = buildRivalGroupB();
+    const supported = makeThirdStanding('KOR', 'A', 3, -2, 1);
+
+    const cond = classifyRivalGroup(supported, groupMatches, groupTeams, teamsById);
+
+    // B1·B2 는 어떤 결과든 1·2위 확정
+    expect(cond.lockedTopTwoTeamIds).toEqual(['B1', 'B2']);
+    // 잔여 B3 vs B4 결과에 따라 3위 자리는 B3 또는 B4
+    expect(cond.thirdCandidateTeamIds).toContain('B3');
+    expect(cond.thirdCandidateTeamIds).toContain('B4');
+  });
+
   it('우리가 충분히 강하면 라이벌 3위가 어떤 결과든 아래 → AlwaysBelow', () => {
     const { groupTeams, groupMatches, teamsById } = buildRivalGroupB();
     // 우리: 3점, 골득실 +5 (강한 3위) → B의 3위(최대 3점·골득실 -1)는 항상 아래

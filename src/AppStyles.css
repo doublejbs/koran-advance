@@ -730,14 +730,14 @@ table.standings tbody td {
   color: #06231b;
 }
 
-/* ===== 진출 조건 보드 ===== */
-.board {
+/* ===== 진출 조건 — 조별 3위 경쟁 ===== */
+.threat {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-.board-headline {
+.threat-banner {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -748,77 +748,69 @@ table.standings tbody td {
   border-radius: var(--radius);
 }
 
-.board-headline.is-clinched {
+.threat-banner.is-clinched {
   border-left-color: var(--qualify);
 }
 
-.board-headline.is-eliminated {
-  border-left-color: var(--eliminate);
-}
-
-.board-headline.is-contention {
+.threat-banner.is-contention {
   border-left-color: var(--contention);
 }
 
-.board-headline .status-pill {
+.threat-banner .status-pill {
   align-self: flex-start;
 }
 
-.board-headline__desc {
+.threat-banner__desc {
   margin: 0;
   font-size: 13px;
   line-height: 1.5;
   color: var(--text-dim);
 }
 
-.board-headline__magic {
+.threat-summary {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--contention);
+  border-radius: var(--radius);
 }
 
-.board-headline__magic-main {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.5;
-  color: var(--text);
-}
-
-.board-headline__magic-hint {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--contention);
-  font-weight: 700;
-}
-
-.board-swing {
+.threat-summary__me {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.board-swing__head {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.board-swing__title {
+  align-items: center;
+  gap: 8px;
   margin: 0;
-  font-size: 15px;
+  flex-wrap: wrap;
+}
+
+.threat-summary__flag {
+  font-size: 22px;
+}
+
+.threat-summary__name {
+  font-size: 16px;
   font-weight: 800;
   color: var(--text);
 }
 
-.board-swing__subtitle {
-  margin: 0;
-  font-size: 12px;
+.threat-summary__rank {
+  font-size: 13px;
+  font-weight: 700;
   color: var(--text-dim);
 }
 
-.board-card-list {
+.threat-summary__line {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.threat-card-list {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -827,308 +819,112 @@ table.standings tbody td {
   gap: 10px;
 }
 
-.board-card {
+.threat-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
-.board-card__head {
+.threat-card__head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.board-card__group {
+.threat-card__group {
   font-size: 12px;
   font-weight: 800;
   color: var(--text);
   background: var(--surface-3);
-  padding: 3px 10px;
+  padding: 2px 10px;
   border-radius: 6px;
+  flex: 0 0 auto;
 }
 
-.board-card__third {
+.threat-card__third {
   display: flex;
   align-items: center;
   gap: 6px;
   min-width: 0;
+  flex: 1 1 auto;
 }
 
-.board-card__third-label {
-  font-size: 11px;
+.threat-card__third-label {
+  font-size: 12px;
   font-weight: 700;
   color: var(--text-faint);
+  flex: 0 0 auto;
 }
 
-.board-card__third-flag {
-  font-size: 18px;
-}
-
-.board-card__third-name {
+.threat-card__third-teams {
   font-size: 13px;
   font-weight: 700;
   color: var(--text);
-  white-space: nowrap;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.board-match-list {
+.threat-chip {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.threat-chip.is-eliminate {
+  color: var(--eliminate);
+  background: var(--eliminate-soft);
+}
+
+.threat-chip.is-qualify {
+  color: var(--qualify);
+  background: var(--qualify-soft);
+}
+
+.threat-chip.is-contention {
+  color: var(--contention);
+  background: var(--contention-soft);
+}
+
+.threat-hints {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
-.board-match {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 6px;
-  padding: 8px;
-  min-height: 44px;
+.threat-hint {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  padding: 6px 10px;
   background: var(--surface-2);
-  border: 1px solid var(--border);
   border-radius: 8px;
 }
 
-/* 클릭 가능한 케이스 행(미리보기 토글) 공통 affordance */
-.board-case {
-  cursor: pointer;
-  border: 1px solid transparent;
-  width: 100%;
-  font-family: inherit;
-  transition: border-color 0.12s, filter 0.12s;
-}
-
-.board-case:hover {
-  filter: brightness(1.12);
-}
-
-.board-case.is-open {
-  border-color: var(--accent);
-}
-
-.board-match__favorable {
-  grid-column: 1 / -1;
-  min-height: 44px;
-  font-size: 12px;
-  font-weight: 800;
-  text-align: center;
-  padding: 4px 8px;
-  border-radius: 6px;
-}
-
-.board-match__favorable.is-favorable {
-  color: var(--qualify);
-  background: var(--qualify-soft);
-}
-
-.board-match__favorable.is-unknown {
-  color: var(--text-dim);
-  background: var(--surface-3);
-}
-
-.board-match__verdicts {
-  grid-column: 1 / -1;
-  list-style: none;
+.threat-card__note {
   margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.board-match__verdict-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.board-match__verdict {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  min-height: 44px;
-  padding: 4px 8px;
-  border-radius: 6px;
   font-size: 12px;
-}
-
-.board-match__verdict-result {
-  font-weight: 700;
-  color: var(--text);
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.board-match__verdict-effect {
-  font-weight: 800;
-  flex: 0 0 auto;
-}
-
-.board-match__verdict.is-favorable {
-  background: var(--qualify-soft);
-}
-
-.board-match__verdict.is-favorable .board-match__verdict-effect {
-  color: var(--qualify);
-}
-
-.board-match__verdict.is-unfavorable {
-  background: var(--eliminate-soft);
-}
-
-.board-match__verdict.is-unfavorable .board-match__verdict-effect {
-  color: var(--eliminate);
-}
-
-.board-match__verdict.is-conditional {
-  background: var(--surface-3);
-}
-
-.board-match__verdict.is-conditional .board-match__verdict-effect {
   color: var(--text-dim);
 }
 
-/* 케이스 미리보기(3위 순위표 펼침) */
-.board-preview {
-  grid-column: 1 / -1;
-  margin-top: 8px;
-  background: var(--surface-2);
-  border: 1px solid var(--accent);
-  border-radius: var(--radius-sm);
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.board-preview__head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.board-preview__title {
+.threat-card__locked {
   margin: 0;
-  font-size: 13px;
-  font-weight: 800;
-  line-height: 1.5;
-  color: var(--text);
-}
-
-.board-preview__close {
-  flex: 0 0 auto;
-  width: 44px;
-  height: 44px;
-  border: none;
-  background: transparent;
-  color: var(--text-dim);
-  font-size: 22px;
-  line-height: 1;
-  border-radius: var(--radius-sm);
-}
-
-.board-preview__close:active {
-  background: var(--surface-3);
-}
-
-.board-match__team {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-}
-
-.board-match__team--away {
-  justify-content: flex-end;
-}
-
-.board-match__flag {
-  font-size: 18px;
-}
-
-.board-match__name {
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.board-match__vs {
   font-size: 11px;
-  font-weight: 700;
-  color: var(--text-faint);
-  flex: 0 0 auto;
-}
-
-.board-match__score {
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--text);
-  flex: 0 0 auto;
-  white-space: nowrap;
-  text-align: center;
-}
-
-.board-match__live {
-  grid-column: 1 / -1;
-  justify-self: center;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  color: var(--eliminate);
-  background: var(--eliminate-soft);
-  padding: 2px 8px;
-  border-radius: 999px;
-  animation: pulse 1.6s ease-in-out infinite;
-}
-
-.board-card__hint {
-  margin: 0;
-  font-size: 12px;
-  color: var(--text-dim);
-}
-
-.board-summary {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 12px 14px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-}
-
-.board-summary__line {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.board-summary__line.is-locked {
-  color: var(--eliminate);
-  font-weight: 700;
-}
-
-.board-summary__line.is-safe {
   color: var(--text-faint);
 }
+
 
 
 @keyframes pulse {

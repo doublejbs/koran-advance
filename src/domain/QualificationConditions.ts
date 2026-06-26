@@ -37,6 +37,8 @@ export interface RivalGroupCondition {
   currentThirdTeamId: string | null;
   pendingMatchIds: string[];
   hints: MatchHint[];
+  thirdCandidateTeamIds: string[]; // 잔여 결과 조합 중 그 조 3위 자리에 들어올 수 있는 팀들
+  lockedTopTwoTeamIds: string[]; // 모든 조합에서 rankInGroup<=2 인 팀("2위 이상 확정")
 }
 
 /** 3위 경합 판정 요약(승점 산수 부분). */
@@ -55,6 +57,7 @@ export interface QualificationConditions {
   swingGroups: RivalGroupCondition[];
   alreadyAboveGroups: string[];
   safeBelowGroups: string[];
+  rivalGroups: RivalGroupCondition[]; // 응원국 조 제외 모든 조 전체 목록(Swing→AlreadyAbove→AlwaysBelow, 각 group 사전순)
 }
 
 /**
@@ -136,6 +139,11 @@ export const classifyRivalGroup = (
   // 잔여 경기가 없으면 현재 상태로 위/아래만 판정.
   if (pending.length === 0) {
     const above = rivalThirdIsAbove(supportedRecord, groupMatches, groupTeams, teamsById);
+    const thirdCandidateTeamIds = currentThirdTeamId ? [currentThirdTeamId] : [];
+    const lockedTopTwoTeamIds = currentStandings
+      .filter((standing) => standing.rankInGroup <= 2)
+      .map((standing) => standing.teamId)
+      .sort((a, b) => a.localeCompare(b));
 
     return {
       group,
@@ -143,12 +151,18 @@ export const classifyRivalGroup = (
       currentThirdTeamId,
       pendingMatchIds,
       hints: [],
+      thirdCandidateTeamIds,
+      lockedTopTwoTeamIds,
     };
   }
 
   // 모든 결과 조합(3^pending)을 enumerate 해 각 조합에서 그 조 3위가 우리보다 위인지 기록한다.
+  // 동시에 각 팀의 가능한 순위(3위 후보 / 항상 1·2위)도 수집한다.
   const total = 3 ** pending.length;
   const comboAbove: boolean[] = [];
+  const thirdCandidateSet = new Set<string>();
+  const everTopTwo = new Set<string>(); // 한 번이라도 1·2위였던 팀
+  const everBelowTopTwo = new Set<string>(); // 한 번이라도 3·4위였던 팀
 
   for (let combo = 0; combo < total; combo += 1) {
     let remainder = combo;
@@ -163,9 +177,31 @@ export const classifyRivalGroup = (
     });
 
     const scenarioMatches = applyScenario(groupMatches, overrides);
+    const standings = computeGroupStandings(scenarioMatches, groupTeams);
 
-    comboAbove.push(rivalThirdIsAbove(supportedRecord, scenarioMatches, groupTeams, teamsById));
+    standings.forEach((standing) => {
+      if (standing.rankInGroup === 3) {
+        thirdCandidateSet.add(standing.teamId);
+      }
+
+      if (standing.rankInGroup <= 2) {
+        everTopTwo.add(standing.teamId);
+      } else {
+        everBelowTopTwo.add(standing.teamId);
+      }
+    });
+
+    const third = standings.find((standing) => standing.rankInGroup === 3);
+
+    comboAbove.push(
+      third ? compareThirdPlaceRecords(third, supportedRecord, teamsById) < 0 : false,
+    );
   }
+
+  const thirdCandidateTeamIds = [...thirdCandidateSet].sort((a, b) => a.localeCompare(b));
+  const lockedTopTwoTeamIds = [...everTopTwo]
+    .filter((teamId) => !everBelowTopTwo.has(teamId))
+    .sort((a, b) => a.localeCompare(b));
 
   const allAbove = comboAbove.every((above) => above);
   const allBelow = comboAbove.every((above) => !above);
@@ -238,6 +274,8 @@ export const classifyRivalGroup = (
     currentThirdTeamId,
     pendingMatchIds,
     hints,
+    thirdCandidateTeamIds,
+    lockedTopTwoTeamIds,
   };
 };
 
@@ -264,6 +302,7 @@ export const analyzeQualificationConditions = (
     swingGroups: [],
     alreadyAboveGroups: [],
     safeBelowGroups: [],
+    rivalGroups: [],
   };
 
   const supportedTeam = teams.find((team) => team.id === supportedTeamId);
@@ -341,6 +380,7 @@ export const analyzeQualificationConditions = (
   const swingGroups: RivalGroupCondition[] = [];
   const alreadyAboveGroups: string[] = [];
   const safeBelowGroups: string[] = [];
+  const conditions: RivalGroupCondition[] = [];
 
   const groupNames = [...teamsByGroup.keys()].sort((a, b) => a.localeCompare(b));
 
@@ -358,6 +398,8 @@ export const analyzeQualificationConditions = (
       teamsById,
     );
 
+    conditions.push(condition);
+
     if (condition.state === RivalGroupState.AlreadyAbove) {
       lockedAboveCount += 1;
       alreadyAboveGroups.push(group);
@@ -366,6 +408,20 @@ export const analyzeQualificationConditions = (
     } else {
       safeBelowGroups.push(group);
     }
+  });
+
+  // rivalGroups 정렬: Swing → AlreadyAbove → AlwaysBelow, 각 그룹은 group 사전순.
+  const stateOrder: Record<RivalGroupState, number> = {
+    [RivalGroupState.Swing]: 0,
+    [RivalGroupState.AlreadyAbove]: 1,
+    [RivalGroupState.AlwaysBelow]: 2,
+  };
+  const rivalGroups = [...conditions].sort((a, b) => {
+    if (stateOrder[a.state] !== stateOrder[b.state]) {
+      return stateOrder[a.state] - stateOrder[b.state];
+    }
+
+    return a.group.localeCompare(b.group);
   });
 
   const swingCount = swingGroups.length;
@@ -380,5 +436,6 @@ export const analyzeQualificationConditions = (
     swingGroups,
     alreadyAboveGroups,
     safeBelowGroups,
+    rivalGroups,
   };
 };
