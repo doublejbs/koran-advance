@@ -76,6 +76,7 @@ export const Ko = {
     threatLockedTopTwo: '{{teams}} 2위 이상 확정',
     tileSafe: '안전',
     tileUnfavorable: '불리',
+    tileFailed: '실패',
     sheetClose: '닫기',
 
     // 진출 조건 — 결과별 순위 미리보기
