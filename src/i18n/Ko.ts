@@ -70,12 +70,20 @@ export const Ko = {
     threatAbove: '우리보다 위',
     threatBelow: '우리보다 아래',
     threatSwing: '결과에 따라',
-    threatHintFavorable: '{{matchup}}: {{result}}면 우리 아래',
-    threatHintConditional: '{{matchup}}: 결과 조합에 따라',
     threatNoteAlwaysAbove: '어떤 결과든 우리보다 위',
     threatNoteAlwaysBelow: '어떤 결과든 우리보다 아래',
     threatNoteSettled: '확정',
     threatLockedTopTwo: '{{teams}} 2위 이상 확정',
+
+    // 진출 조건 — 결과별 순위 미리보기
+    scenarioHint: '유리한 결과로 세팅됨 · 눌러서 변경',
+    scenarioFavorable: '유리한 결과',
+    scenarioReset: '초기화',
+    scenarioProjectedThird: '예상 3위',
+    scenarioMyOverallRank: '이 결과면 전체 3위 {{rank}}위 / {{total}}',
+    scenarioInCut: '진출권',
+    scenarioOutCut: '진출권 밖',
+    scenarioThisGroup: '이 조',
 
     // 광고
     ad: '광고',

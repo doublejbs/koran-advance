@@ -70,12 +70,20 @@ export const En = {
     threatAbove: 'Above us',
     threatBelow: 'Below us',
     threatSwing: 'Depends',
-    threatHintFavorable: '{{matchup}}: {{result}} → below us',
-    threatHintConditional: '{{matchup}}: depends on the combination',
     threatNoteAlwaysAbove: 'Above us under any result',
     threatNoteAlwaysBelow: 'Below us under any result',
     threatNoteSettled: 'Settled',
     threatLockedTopTwo: '{{teams}} locked top-2',
+
+    // conditions — per-result standings preview
+    scenarioHint: 'Set to best case · tap to change',
+    scenarioFavorable: 'Best case',
+    scenarioReset: 'Reset',
+    scenarioProjectedThird: 'Projected 3rd',
+    scenarioMyOverallRank: 'This result → overall 3rd #{{rank}} / {{total}}',
+    scenarioInCut: 'In top 8',
+    scenarioOutCut: 'Outside top 8',
+    scenarioThisGroup: 'This group',
 
     // ad
     ad: 'Advertisement',

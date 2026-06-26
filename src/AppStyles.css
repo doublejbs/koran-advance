@@ -1,29 +1,31 @@
 :root {
-  --bg: #0b0f17;
-  --bg-grad-top: #111a2e;
-  --surface: #161d2b;
-  --surface-2: #1d2638;
-  --surface-3: #243049;
-  --border: #2a3550;
-  --text: #eef2fb;
-  --text-dim: #93a0bd;
-  --text-faint: #67748f;
+  --bg: #ffffff;
+  --bg-grad-top: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f2f4f6;
+  --surface-3: #eef1f4;
+  --border: #eef1f4;
+  --border-strong: #e5e8eb;
+  --text: #191f28;
+  --text-dim: #4e5968;
+  --text-faint: #8b95a1;
 
-  --accent: #2ee6a6;
-  --accent-cyan: #28c8e6;
+  --accent: #3182f6;
+  --accent-soft: #e8f3ff;
+  --accent-cyan: #3182f6;
 
-  --qualify: #2ee68a;
-  --qualify-soft: rgba(46, 230, 138, 0.14);
-  --eliminate: #ff5a6e;
-  --eliminate-soft: rgba(255, 90, 110, 0.12);
-  --contention: #ffb53d;
-  --contention-soft: rgba(255, 181, 61, 0.14);
+  --qualify: #10b981;
+  --qualify-soft: #e7f7f0;
+  --eliminate: #f04452;
+  --eliminate-soft: #feecec;
+  --contention: #ff9500;
+  --contention-soft: #fff3e0;
 
-  --radius: 14px;
-  --radius-sm: 10px;
-  --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --radius: 16px;
+  --radius-sm: 12px;
+  --shadow: 0 2px 8px rgba(20, 30, 50, 0.06);
 
-  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo',
+  --font: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
     'Noto Sans KR', Roboto, sans-serif;
 }
 
@@ -38,9 +40,7 @@ body {
 }
 
 body {
-  background:
-    radial-gradient(120% 60% at 50% -10%, var(--bg-grad-top) 0%, var(--bg) 55%) fixed,
-    var(--bg);
+  background: var(--bg);
   color: var(--text);
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
@@ -78,18 +78,16 @@ button {
   font-size: 19px;
   line-height: 1.2;
   margin: 0;
-  letter-spacing: -0.01em;
-  background: linear-gradient(90deg, var(--accent), var(--accent-cyan));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  font-weight: 700;
 }
 
 .app-header__subtitle {
   margin: 4px 0 0;
   font-size: 12px;
-  color: var(--text-dim);
+  color: var(--text-faint);
+  font-weight: 500;
 }
 
 .app-main {
@@ -104,7 +102,7 @@ button {
 .lang-toggle {
   display: inline-flex;
   background: var(--surface-2);
-  border: 1px solid var(--border);
+  border: none;
   border-radius: 999px;
   padding: 3px;
   flex: 0 0 auto;
@@ -124,8 +122,9 @@ button {
 }
 
 .lang-toggle__btn.is-active {
-  background: linear-gradient(90deg, var(--accent), var(--accent-cyan));
-  color: #06231b;
+  background: #ffffff;
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 /* ===== 상태 배너 ===== */
@@ -138,25 +137,17 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 12px 14px;
+  padding: 16px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-left: 4px solid var(--contention);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  backdrop-filter: blur(8px);
 }
 
-.status-banner.is-clinched {
-  border-left-color: var(--qualify);
-}
-
-.status-banner.is-eliminated {
-  border-left-color: var(--eliminate);
-}
-
+.status-banner.is-clinched,
+.status-banner.is-eliminated,
 .status-banner.is-contention {
-  border-left-color: var(--contention);
+  border-color: var(--border);
 }
 
 .status-banner__identity {
@@ -167,8 +158,16 @@ button {
 }
 
 .status-banner__flag {
-  font-size: 30px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
   line-height: 1;
+  flex: 0 0 auto;
 }
 
 .status-banner__text {
@@ -178,16 +177,19 @@ button {
 }
 
 .status-banner__name {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
+  letter-spacing: -0.02em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .status-banner__meta {
-  font-size: 12px;
-  color: var(--text-dim);
+  font-size: 13px;
+  color: var(--text-faint);
+  font-weight: 500;
+  margin-top: 2px;
 }
 
 .status-banner__third {
@@ -204,9 +206,9 @@ button {
 
 .status-pill {
   font-size: 12px;
-  font-weight: 800;
-  padding: 5px 10px;
-  border-radius: 999px;
+  font-weight: 700;
+  padding: 6px 11px;
+  border-radius: 10px;
   white-space: nowrap;
 }
 
@@ -240,6 +242,7 @@ button {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
+  box-shadow: var(--shadow);
 }
 
 .third-table__head {
@@ -254,8 +257,9 @@ button {
 
 .third-table__caption {
   margin: 3px 0 0;
-  font-size: 11.5px;
-  color: var(--text-dim);
+  font-size: 12px;
+  color: var(--text-faint);
+  font-weight: 500;
 }
 
 .third-table__scroll {
@@ -273,13 +277,12 @@ table.standings thead th {
   position: sticky;
   top: 0;
   z-index: 5;
-  background: var(--surface-2);
-  color: var(--text-dim);
-  font-weight: 700;
-  font-size: 10.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  padding: 8px 4px;
+  background: var(--surface);
+  color: var(--text-faint);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  padding: 10px 4px;
   text-align: center;
   border-bottom: 1px solid var(--border);
 }
@@ -290,15 +293,15 @@ table.standings thead th.col-team {
 }
 
 table.standings tbody td {
-  padding: 9px 4px;
+  padding: 11px 4px;
   text-align: center;
-  border-bottom: 1px solid rgba(42, 53, 80, 0.5);
+  border-bottom: 1px solid var(--border);
   color: var(--text);
 }
 
 .col-rank {
   width: 26px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-dim);
 }
 
@@ -322,8 +325,8 @@ table.standings tbody td {
 }
 
 .col-points {
-  font-weight: 800;
-  color: var(--accent);
+  font-weight: 700;
+  color: var(--text);
 }
 
 .cell-flag {
@@ -364,16 +367,16 @@ table.standings tbody td {
 
 /* 응원국 하이라이트 */
 .standings__row.is-supported td {
-  background: rgba(40, 200, 230, 0.12);
+  background: var(--accent-soft);
 }
 
 .standings__row.is-supported td:first-child {
-  box-shadow: inset 3px 0 0 var(--accent-cyan);
+  box-shadow: inset 3px 0 0 var(--accent);
 }
 
 .standings__row.is-supported .cell-name {
   font-weight: 800;
-  color: #fff;
+  color: var(--accent);
 }
 
 /* 진출 경계선 행 */
@@ -387,15 +390,14 @@ table.standings tbody td {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-size: 9.5px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--qualify);
-  padding: 4px 0;
-  background: var(--qualify-soft);
-  border-top: 1px dashed var(--qualify);
-  border-bottom: 1px dashed var(--qualify);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  padding: 5px 0;
+  background: var(--accent-soft);
+  border-top: 1px solid var(--accent);
+  border-bottom: 1px solid var(--accent);
 }
 
 /* ===== 라이브 경기 ===== */
@@ -403,7 +405,8 @@ table.standings tbody td {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 14px;
+  padding: 16px;
+  box-shadow: var(--shadow);
 }
 
 .live-section__head {
@@ -424,7 +427,7 @@ table.standings tbody td {
   height: 9px;
   border-radius: 50%;
   background: var(--eliminate);
-  box-shadow: 0 0 0 0 rgba(255, 90, 110, 0.6);
+  box-shadow: 0 0 0 0 rgba(240, 68, 82, 0.5);
   animation: pulse 1.4s ease-in-out infinite;
 }
 
@@ -439,7 +442,7 @@ table.standings tbody td {
 
 .live-card {
   background: var(--surface-2);
-  border: 1px solid var(--border);
+  border: none;
   border-radius: var(--radius-sm);
   padding: 12px;
 }
@@ -455,7 +458,7 @@ table.standings tbody td {
   font-size: 11px;
   font-weight: 700;
   color: var(--text-dim);
-  background: var(--surface-3);
+  background: #ffffff;
   padding: 2px 8px;
   border-radius: 6px;
 }
@@ -532,19 +535,19 @@ table.standings tbody td {
   padding: 0 20px;
   border: none;
   border-radius: var(--radius-sm);
-  background: linear-gradient(90deg, var(--accent), var(--accent-cyan));
-  color: #06231b;
-  font-weight: 800;
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
   font-size: 14px;
 }
 
 .btn-ghost {
   min-height: 38px;
   padding: 0 16px;
-  border: 1px solid var(--border);
+  border: none;
   border-radius: 999px;
   background: var(--surface-2);
-  color: var(--text);
+  color: var(--text-dim);
   font-size: 12px;
   font-weight: 700;
 }
@@ -590,7 +593,7 @@ table.standings tbody td {
   top: 0;
   z-index: 10;
   padding: 18px 16px 12px;
-  background: linear-gradient(180deg, var(--bg-grad-top), var(--bg));
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 
@@ -604,34 +607,34 @@ table.standings tbody td {
 .select-header__title {
   margin: 0;
   font-size: 19px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  background: linear-gradient(90deg, var(--accent), var(--accent-cyan));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
 }
 
 .select-header__prompt {
   margin: 10px 0 12px;
   font-size: 13px;
-  color: var(--text-dim);
+  color: var(--text-faint);
+  font-weight: 500;
 }
 
 .select-search {
   width: 100%;
-  min-height: 44px;
+  min-height: 46px;
   padding: 0 14px;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
+  border: 1px solid transparent;
   background: var(--surface-2);
   color: var(--text);
   font-size: 15px;
   outline: none;
+  transition: border-color 0.12s, box-shadow 0.12s;
 }
 
 .select-search:focus {
-  border-color: var(--accent-cyan);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .select-search::placeholder {
@@ -648,11 +651,10 @@ table.standings tbody td {
 
 .select-group__label {
   margin: 0 0 8px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: var(--accent);
-  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-faint);
 }
 
 .select-group__list {
@@ -679,10 +681,14 @@ table.standings tbody td {
   transition: background 0.12s, border-color 0.12s, transform 0.08s;
 }
 
+.team-option:hover {
+  background: var(--surface-2);
+}
+
 .team-option:active {
   transform: scale(0.99);
   background: var(--surface-2);
-  border-color: var(--accent-cyan);
+  border-color: var(--accent);
 }
 
 .team-option__flag {
@@ -705,12 +711,12 @@ table.standings tbody td {
 /* ===== 탭 바 ===== */
 .tab-bar {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   margin: 12px 12px 0;
   padding: 4px;
   background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 999px;
+  border: none;
+  border-radius: 14px;
 }
 
 .tab-bar__btn {
@@ -718,16 +724,17 @@ table.standings tbody td {
   min-height: 44px;
   border: none;
   background: transparent;
-  color: var(--text-dim);
-  font-size: 13px;
+  color: var(--text-faint);
+  font-size: 14px;
   font-weight: 700;
-  border-radius: 999px;
-  transition: background 0.15s, color 0.15s;
+  border-radius: 11px;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 }
 
 .tab-bar__btn.is-active {
-  background: linear-gradient(90deg, var(--accent), var(--accent-cyan));
-  color: #06231b;
+  background: #ffffff;
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 /* ===== 진출 조건 — 조별 3위 경쟁 ===== */
@@ -741,19 +748,16 @@ table.standings tbody td {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 14px;
+  padding: 16px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-left: 4px solid var(--contention);
   border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
-.threat-banner.is-clinched {
-  border-left-color: var(--qualify);
-}
-
+.threat-banner.is-clinched,
 .threat-banner.is-contention {
-  border-left-color: var(--contention);
+  border-color: var(--border);
 }
 
 .threat-banner .status-pill {
@@ -765,17 +769,18 @@ table.standings tbody td {
   font-size: 13px;
   line-height: 1.5;
   color: var(--text-dim);
+  font-weight: 500;
 }
 
 .threat-summary {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 14px;
+  padding: 16px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-left: 4px solid var(--contention);
   border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
 .threat-summary__me {
@@ -792,7 +797,7 @@ table.standings tbody td {
 
 .threat-summary__name {
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text);
 }
 
@@ -822,11 +827,12 @@ table.standings tbody td {
 .threat-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 12px;
+  border-radius: var(--radius);
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  box-shadow: var(--shadow);
 }
 
 .threat-card__head {
@@ -837,12 +843,17 @@ table.standings tbody td {
 }
 
 .threat-card__group {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 800;
-  color: var(--text);
-  background: var(--surface-3);
-  padding: 2px 10px;
-  border-radius: 6px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  min-width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border-radius: 12px;
   flex: 0 0 auto;
 }
 
@@ -874,9 +885,9 @@ table.standings tbody td {
 .threat-chip {
   flex: 0 0 auto;
   font-size: 12px;
-  font-weight: 800;
-  padding: 4px 10px;
-  border-radius: 999px;
+  font-weight: 700;
+  padding: 6px 11px;
+  border-radius: 9px;
   white-space: nowrap;
 }
 
@@ -925,7 +936,297 @@ table.standings tbody td {
   color: var(--text-faint);
 }
 
+/* 진출 조건 — 결과별 순위 미리보기 */
+.scenario {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
+.scenario__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.scenario__hint {
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.scenario__reset {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-dim);
+  background: var(--surface-2);
+  border: none;
+  border-radius: 8px;
+  padding: 5px 11px;
+  cursor: pointer;
+}
+
+.scenario__reset:hover {
+  color: var(--text);
+}
+
+.scenario__actions {
+  display: flex;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.scenario__action {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: none;
+  border-radius: 8px;
+  padding: 5px 11px;
+  cursor: pointer;
+}
+
+.scenario__action:hover {
+  filter: brightness(0.98);
+}
+
+.scenario__matches {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scenario-match {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.scenario-match__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-faint);
+}
+
+.scenario-match__btns {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.scenario-btn {
+  flex: 1 1 auto;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 6px;
+  border-radius: 14px;
+  border: none;
+  background: var(--surface-2);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: transform 0.05s ease, background 0.12s, color 0.12s;
+}
+
+.scenario-btn:hover {
+  color: var(--text);
+}
+
+.scenario-btn:active {
+  transform: scale(0.97);
+}
+
+.scenario-btn.is-favorable {
+  color: var(--text-dim);
+}
+
+.scenario-btn.is-unfavorable {
+  color: var(--text-dim);
+}
+
+.scenario-btn.is-conditional {
+  color: var(--text-dim);
+}
+
+.scenario-btn.is-selected {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.scenario-btn.is-selected.is-favorable {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.scenario-btn.is-selected.is-unfavorable {
+  background: var(--eliminate);
+  color: #ffffff;
+}
+
+.scenario-btn.is-selected.is-conditional {
+  background: var(--contention);
+  color: #ffffff;
+}
+
+.scenario-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.scenario-table th {
+  text-align: right;
+  font-weight: 700;
+  color: var(--text-faint);
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.scenario-table th:nth-child(2) {
+  text-align: left;
+}
+
+.scenario-table td {
+  text-align: right;
+  padding: 5px 6px;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--surface-2);
+}
+
+.scenario-table__team {
+  text-align: left;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.scenario-table__flag {
+  margin-right: 6px;
+}
+
+.scenario-table__row.is-third.is-above {
+  background: var(--eliminate-soft);
+}
+
+.scenario-table__row.is-third.is-below {
+  background: var(--qualify-soft);
+}
+
+.scenario__verdict {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.scenario__verdict-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-faint);
+}
+
+.scenario__verdict-team {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.scenario__overall-rank {
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: var(--accent-soft);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.scenario-third {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.scenario-third th {
+  text-align: right;
+  font-weight: 700;
+  color: var(--text-faint);
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.scenario-third th:nth-child(2),
+.scenario-third td:nth-child(2) {
+  text-align: left;
+}
+
+.scenario-third th:nth-child(3),
+.scenario-third td:nth-child(3) {
+  text-align: center;
+}
+
+.scenario-third td {
+  text-align: right;
+  padding: 5px 6px;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--surface-2);
+}
+
+.scenario-third__team {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.scenario-third__flag {
+  margin-right: 6px;
+}
+
+.scenario-third__row.is-qualify td:first-child {
+  color: var(--qualify);
+  font-weight: 800;
+}
+
+.scenario-third__row.is-eliminate td:first-child {
+  color: var(--eliminate);
+  font-weight: 800;
+}
+
+.scenario-third__row.is-supported {
+  background: var(--accent-soft);
+}
+
+.scenario-third__row.is-supported .scenario-third__team {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.scenario-third__row.is-cutline td {
+  border-bottom: 2px solid var(--accent);
+}
+
+.scenario-third__row.is-rival {
+  background: var(--contention-soft);
+}
+
+.scenario-third__tag {
+  margin-left: 7px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--contention);
+  background: var(--contention-soft);
+  border: none;
+  border-radius: 7px;
+  padding: 2px 7px;
+  white-space: nowrap;
+}
 
 @keyframes pulse {
   0%,

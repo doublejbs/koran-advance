@@ -1,5 +1,6 @@
 # 의존성
 node_modules/
+node_modules
 
 # 빌드 산출물
 dist/
@@ -13,3 +14,8 @@ dist/
 
 # 로컬 도구 설정 (Claude Code preview 등)
 .claude/
+
+# 로컬 전용 개발/검증 설정 (커밋 금지 — 개인키 포함)
+.certs/
+vite.local.config.ts
+vite.mock.config.ts

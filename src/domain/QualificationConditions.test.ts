@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { classifyRivalGroup, summarizeVerdict } from './QualificationConditions';
+import {
+  classifyRivalGroup,
+  findFavorableScenario,
+  projectRivalScenario,
+  summarizeVerdict,
+} from './QualificationConditions';
 import { RivalGroupState } from './RivalGroupState';
 import { SupportedQualState } from './SupportedQualState';
 import { MatchOutcome } from './MatchOutcome';
@@ -141,5 +146,109 @@ describe('classifyRivalGroup', () => {
     const hint = cond.hints.find((h) => h.matchId === live.id)!;
 
     expect(hint.favorable).toBe(MatchOutcome.Draw);
+  });
+});
+
+describe('projectRivalScenario', () => {
+  it('override 없으면 현재(집계 대상) 순위·3위를 그대로 투영한다', () => {
+    const { groupTeams, groupMatches, teamsById } = buildRivalGroupB();
+    const supported = makeThirdStanding('KOR', 'A', 3, -2, 1);
+
+    const projection = projectRivalScenario(
+      supported,
+      groupMatches,
+      groupTeams,
+      teamsById,
+      new Map(),
+    );
+
+    // B1(9) > B2(6) > B3(0, FIFA 우위) > B4(0)
+    expect(projection.standings.map((s) => s.teamId)).toEqual(['B1', 'B2', 'B3', 'B4']);
+    expect(projection.thirdTeamId).toBe('B3');
+    // B3 0점 → 우리(3점)보다 아래
+    expect(projection.thirdIsAboveSupported).toBe(false);
+  });
+
+  it('B3 승 가정 → 그 조 3위(B3 3점)가 우리 위로 올라온다(불리)', () => {
+    const { groupTeams, groupMatches, teamsById, pendingId } = buildRivalGroupB();
+    const supported = makeThirdStanding('KOR', 'A', 3, -2, 1);
+
+    const projection = projectRivalScenario(
+      supported,
+      groupMatches,
+      groupTeams,
+      teamsById,
+      new Map([[pendingId, MatchOutcome.HomeWin]]),
+    );
+
+    expect(projection.thirdTeamId).toBe('B3');
+
+    const b3 = projection.standings.find((s) => s.teamId === 'B3')!;
+
+    expect(b3.points).toBe(3);
+    // B3 3점·골득실 -1 → 우리(3점·-2)보다 위
+    expect(projection.thirdIsAboveSupported).toBe(true);
+  });
+
+  it('무승부 가정 → 그 조 3위가 우리 아래로 내려간다(유리)', () => {
+    const { groupTeams, groupMatches, teamsById, pendingId } = buildRivalGroupB();
+    const supported = makeThirdStanding('KOR', 'A', 3, -2, 1);
+
+    const projection = projectRivalScenario(
+      supported,
+      groupMatches,
+      groupTeams,
+      teamsById,
+      new Map([[pendingId, MatchOutcome.Draw]]),
+    );
+
+    expect(projection.thirdIsAboveSupported).toBe(false);
+  });
+});
+
+describe('findFavorableScenario', () => {
+  it('Swing 조에서 우리에게 유리한(그 조 3위가 아래로 가는) 결과 조합을 찾는다', () => {
+    const { groupTeams, groupMatches, teamsById, pendingId } = buildRivalGroupB();
+    const supported = makeThirdStanding('KOR', 'A', 3, -2, 1);
+    const cond = classifyRivalGroup(supported, groupMatches, groupTeams, teamsById);
+
+    const overrides = findFavorableScenario(
+      supported,
+      groupMatches,
+      groupTeams,
+      teamsById,
+      cond.hints,
+    );
+
+    // B3 vs B4 무승부면 그 조 3위가 우리 아래 → 유리
+    expect(overrides.size).toBe(1);
+    expect(overrides.get(pendingId)).toBe(MatchOutcome.Draw);
+
+    const projection = projectRivalScenario(
+      supported,
+      groupMatches,
+      groupTeams,
+      teamsById,
+      overrides,
+    );
+
+    expect(projection.thirdIsAboveSupported).toBe(false);
+  });
+
+  it('어떤 결과든 우리 위면(유리한 조합 없음) 빈 Map 을 반환한다', () => {
+    const { groupTeams, groupMatches, teamsById } = buildRivalGroupB();
+    // 우리: 0점 → B의 3위(최소 1점)는 항상 위
+    const supported = makeThirdStanding('KOR', 'A', 0, -9, 0);
+    const cond = classifyRivalGroup(supported, groupMatches, groupTeams, teamsById);
+
+    const overrides = findFavorableScenario(
+      supported,
+      groupMatches,
+      groupTeams,
+      teamsById,
+      cond.hints,
+    );
+
+    expect(overrides.size).toBe(0);
   });
 });
