@@ -1,0 +1,1523 @@
+:root {
+  --bg: #ffffff;
+  --bg-grad-top: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f2f4f6;
+  --surface-3: #eef1f4;
+  --border: #eef1f4;
+  --border-strong: #e5e8eb;
+  --text: #191f28;
+  --text-dim: #4e5968;
+  --text-faint: #8b95a1;
+
+  --accent: #3182f6;
+  --accent-soft: #e8f3ff;
+  --accent-cyan: #3182f6;
+
+  --qualify: #10b981;
+  --qualify-soft: #e7f7f0;
+  --eliminate: #f04452;
+  --eliminate-soft: #feecec;
+  --contention: #ff9500;
+  --contention-soft: #fff3e0;
+
+  --radius: 16px;
+  --radius-sm: 12px;
+  --shadow: 0 2px 8px rgba(20, 30, 50, 0.06);
+
+  --font: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+    'Noto Sans KR', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* ===== 앱 셸 ===== */
+.app {
+  max-width: 460px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* 하단 고정 광고 바 높이만큼 여백 확보(콘텐츠가 가리지 않도록) */
+  padding: env(safe-area-inset-top) 0 calc(82px + env(safe-area-inset-bottom));
+}
+
+.app-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 16px 12px;
+}
+
+.app-header__title {
+  font-size: 19px;
+  line-height: 1.2;
+  margin: 0;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.app-header__subtitle {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--text-faint);
+  font-weight: 500;
+}
+
+.app-main {
+  flex: 1;
+  padding: 4px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ===== 언어 토글 ===== */
+.lang-toggle {
+  display: inline-flex;
+  background: var(--surface-2);
+  border: none;
+  border-radius: 999px;
+  padding: 3px;
+  flex: 0 0 auto;
+}
+
+.lang-toggle__btn {
+  min-width: 44px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.lang-toggle__btn.is-active {
+  background: #ffffff;
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== 상태 배너 ===== */
+.status-banner {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  margin: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.status-banner.is-clinched,
+.status-banner.is-eliminated,
+.status-banner.is-contention {
+  border-color: var(--border);
+}
+
+.status-banner__identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.status-banner__flag {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.status-banner__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.status-banner__name {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-banner__meta {
+  font-size: 13px;
+  color: var(--text-faint);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.status-banner__third {
+  color: var(--text-faint);
+}
+
+.status-banner__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.status-pill {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 11px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.status-pill.is-clinched {
+  background: var(--qualify-soft);
+  color: var(--qualify);
+}
+
+.status-pill.is-eliminated {
+  background: var(--eliminate-soft);
+  color: var(--eliminate);
+}
+
+.status-pill.is-contention {
+  background: var(--contention-soft);
+  color: var(--contention);
+}
+
+.status-banner__change {
+  background: transparent;
+  border: none;
+  color: var(--text-faint);
+  font-size: 11px;
+  padding: 2px 4px;
+  text-decoration: underline;
+}
+
+/* ===== 3위 순위표 ===== */
+.third-table {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.third-table__head {
+  padding: 14px 14px 8px;
+}
+
+.third-table__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.third-table__caption {
+  margin: 3px 0 0;
+  font-size: 12px;
+  color: var(--text-faint);
+  font-weight: 500;
+}
+
+.third-table__scroll {
+  overflow-x: auto;
+}
+
+table.standings {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+table.standings thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--surface);
+  color: var(--text-faint);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  padding: 10px 4px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+table.standings thead th.col-team {
+  text-align: left;
+  padding-left: 8px;
+}
+
+table.standings tbody td {
+  padding: 11px 4px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.col-rank {
+  width: 26px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.col-team {
+  text-align: left !important;
+  padding-left: 8px !important;
+}
+
+.col-group {
+  width: 24px;
+  color: var(--text-dim);
+}
+
+.col-num {
+  width: 30px;
+}
+
+.col-num.record {
+  width: 46px;
+  letter-spacing: -0.02em;
+}
+
+.col-points {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.cell-flag {
+  font-size: 17px;
+  margin-right: 6px;
+  vertical-align: -2px;
+}
+
+.cell-name {
+  white-space: nowrap;
+}
+
+.cell-live {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 9px;
+  font-weight: 800;
+  color: #fff;
+  background: var(--eliminate);
+  padding: 1px 5px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+/* 진출권 / 탈락권 좌측 띠 */
+.standings__row {
+  position: relative;
+}
+
+.standings__row.is-qualify td:first-child {
+  box-shadow: inset 3px 0 0 var(--qualify);
+}
+
+.standings__row.is-eliminate td:first-child {
+  box-shadow: inset 3px 0 0 var(--eliminate);
+}
+
+/* 응원국 하이라이트 */
+.standings__row.is-supported td {
+  background: var(--accent-soft);
+}
+
+.standings__row.is-supported td:first-child {
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.standings__row.is-supported .cell-name {
+  font-weight: 800;
+  color: var(--accent);
+}
+
+/* 진출 경계선 행 */
+.cutline-row td {
+  padding: 0 !important;
+  border-bottom: none !important;
+}
+
+.cutline-row__label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  padding: 5px 0;
+  background: var(--accent-soft);
+  border-top: 1px solid var(--accent);
+  border-bottom: 1px solid var(--accent);
+}
+
+/* ===== 라이브 경기 ===== */
+.live-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.live-section__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.live-section__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.live-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--eliminate);
+  box-shadow: 0 0 0 0 rgba(240, 68, 82, 0.5);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.live-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.live-card {
+  background: var(--surface-2);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px;
+}
+
+.live-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.live-card__group {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dim);
+  background: #ffffff;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.live-card__minute {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--eliminate);
+  font-variant-numeric: tabular-nums;
+}
+
+.live-card__teams {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.live-card__team {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.live-card__team--away {
+  flex-direction: row-reverse;
+}
+
+.live-card__flag {
+  font-size: 24px;
+}
+
+.live-card__name {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.live-card__score {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 22px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.live-card__sep {
+  color: var(--text-faint);
+}
+
+/* ===== 풋터 ===== */
+.app-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border);
+}
+
+.app-footer__updated {
+  font-size: 11px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== 버튼 / 공통 ===== */
+.btn-primary {
+  min-height: 44px;
+  padding: 0 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.btn-ghost {
+  min-height: 38px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-dim);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.btn-ghost:disabled {
+  opacity: 0.5;
+}
+
+.empty-note {
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 13px;
+  padding: 20px 0;
+  margin: 0;
+}
+
+.error-box {
+  text-align: center;
+  padding: 28px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.error-box__title {
+  margin: 0;
+  color: var(--eliminate);
+  font-weight: 700;
+}
+
+/* ===== 응원국 선택 화면 ===== */
+.select-screen {
+  max-width: 460px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.select-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 18px 16px 12px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.select-header__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.select-header__title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.select-header__prompt {
+  margin: 10px 0 12px;
+  font-size: 13px;
+  color: var(--text-faint);
+  font-weight: 500;
+}
+
+.select-search {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+
+.select-search:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.select-search::placeholder {
+  color: var(--text-faint);
+}
+
+.select-body {
+  flex: 1;
+  padding: 12px 12px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.select-group__label {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-faint);
+}
+
+.select-group__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.team-option {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+  transition: background 0.12s, border-color 0.12s, transform 0.08s;
+}
+
+.team-option:hover {
+  background: var(--surface-2);
+}
+
+.team-option:active {
+  transform: scale(0.99);
+  background: var(--surface-2);
+  border-color: var(--accent);
+}
+
+.team-option__flag {
+  font-size: 26px;
+}
+
+.team-option__name {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.team-option__code {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-faint);
+  letter-spacing: 0.04em;
+}
+
+/* ===== 탭 바 ===== */
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  margin: 12px 12px 0;
+  padding: 4px;
+  background: var(--surface-2);
+  border: none;
+  border-radius: 14px;
+}
+
+.tab-bar__btn {
+  flex: 1;
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 11px;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.tab-bar__btn.is-active {
+  background: #ffffff;
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== 진출 조건 — 조별 3위 경쟁 ===== */
+.threat {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.threat-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.threat-banner.is-clinched,
+.threat-banner.is-contention {
+  border-color: var(--border);
+}
+
+.threat-banner .status-pill {
+  align-self: flex-start;
+}
+
+.threat-banner__desc {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.threat-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.threat-summary__me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.threat-summary__flag {
+  font-size: 22px;
+}
+
+.threat-summary__name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.threat-summary__rank {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.threat-summary__line {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.threat-card-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.threat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: var(--shadow);
+}
+
+.threat-card__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.threat-card__group {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--accent);
+  background: var(--accent-soft);
+  min-width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border-radius: 12px;
+  flex: 0 0 auto;
+}
+
+.threat-card__third {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.threat-card__third-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-faint);
+  flex: 0 0 auto;
+}
+
+.threat-card__third-teams {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.threat-chip {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 11px;
+  border-radius: 9px;
+  white-space: nowrap;
+}
+
+.threat-chip.is-eliminate {
+  color: var(--eliminate);
+  background: var(--eliminate-soft);
+}
+
+.threat-chip.is-qualify {
+  color: var(--qualify);
+  background: var(--qualify-soft);
+}
+
+.threat-chip.is-contention {
+  color: var(--contention);
+  background: var(--contention-soft);
+}
+
+.threat-hints {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.threat-hint {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  padding: 6px 10px;
+  background: var(--surface-2);
+  border-radius: 8px;
+}
+
+.threat-card__note {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.threat-card__locked {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+/* 진출 조건 — 결과별 순위 미리보기 */
+.scenario {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.scenario__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.scenario__hint {
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.scenario__reset {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-dim);
+  background: var(--surface-2);
+  border: none;
+  border-radius: 8px;
+  padding: 5px 11px;
+  cursor: pointer;
+}
+
+.scenario__reset:hover {
+  color: var(--text);
+}
+
+.scenario__actions {
+  display: flex;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.scenario__action {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: none;
+  border-radius: 8px;
+  padding: 5px 11px;
+  cursor: pointer;
+}
+
+.scenario__action:hover {
+  filter: brightness(0.98);
+}
+
+.scenario__matches {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scenario-match {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.scenario-match__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-faint);
+}
+
+.scenario-match__btns {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.scenario-btn {
+  flex: 1 1 auto;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 6px;
+  border-radius: 14px;
+  border: none;
+  background: var(--surface-2);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: transform 0.05s ease, background 0.12s, color 0.12s;
+}
+
+.scenario-btn:hover {
+  color: var(--text);
+}
+
+.scenario-btn:active {
+  transform: scale(0.97);
+}
+
+.scenario-btn.is-favorable {
+  color: var(--text-dim);
+}
+
+.scenario-btn.is-unfavorable {
+  color: var(--text-dim);
+}
+
+.scenario-btn.is-conditional {
+  color: var(--text-dim);
+}
+
+.scenario-btn.is-selected {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.scenario-btn.is-selected.is-favorable {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.scenario-btn.is-selected.is-unfavorable {
+  background: var(--eliminate);
+  color: #ffffff;
+}
+
+.scenario-btn.is-selected.is-conditional {
+  background: var(--contention);
+  color: #ffffff;
+}
+
+.scenario-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.scenario-table th {
+  text-align: right;
+  font-weight: 700;
+  color: var(--text-faint);
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.scenario-table th:nth-child(2) {
+  text-align: left;
+}
+
+.scenario-table td {
+  text-align: right;
+  padding: 5px 6px;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--surface-2);
+}
+
+.scenario-table__team {
+  text-align: left;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.scenario-table__flag {
+  margin-right: 6px;
+}
+
+.scenario-table__row.is-third.is-above {
+  background: var(--eliminate-soft);
+}
+
+.scenario-table__row.is-third.is-below {
+  background: var(--qualify-soft);
+}
+
+.scenario__verdict {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.scenario__verdict-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-faint);
+}
+
+.scenario__verdict-team {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.scenario__overall-rank {
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: var(--accent-soft);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.scenario-third {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.scenario-third th {
+  text-align: right;
+  font-weight: 700;
+  color: var(--text-faint);
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.scenario-third th:nth-child(2),
+.scenario-third td:nth-child(2) {
+  text-align: left;
+}
+
+.scenario-third th:nth-child(3),
+.scenario-third td:nth-child(3) {
+  text-align: center;
+}
+
+.scenario-third td {
+  text-align: right;
+  padding: 5px 6px;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--surface-2);
+}
+
+.scenario-third__team {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.scenario-third__flag {
+  margin-right: 6px;
+}
+
+.scenario-third__row.is-qualify td:first-child {
+  color: var(--qualify);
+  font-weight: 800;
+}
+
+.scenario-third__row.is-eliminate td:first-child {
+  color: var(--eliminate);
+  font-weight: 800;
+}
+
+.scenario-third__row.is-supported {
+  background: var(--accent-soft);
+}
+
+.scenario-third__row.is-supported .scenario-third__team {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.scenario-third__row.is-cutline td {
+  border-bottom: 2px solid var(--accent);
+}
+
+.scenario-third__row.is-rival {
+  background: var(--contention-soft);
+}
+
+.scenario-third__tag {
+  margin-left: 7px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--contention);
+  background: var(--contention-soft);
+  border: none;
+  border-radius: 7px;
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* 하단 광고(애드센스) */
+.ad-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  padding: 6px 16px calc(6px + env(safe-area-inset-bottom, 0px));
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -2px 12px rgba(20, 30, 50, 0.06);
+  /* AdSense 가 큰 높이를 예약/주입해도 바를 컴팩트하게 유지(넘침 클립) */
+  max-height: calc(64px + env(safe-area-inset-bottom, 0px));
+  overflow: hidden;
+}
+
+.ad-banner__label {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.ad-banner .adsbygoogle {
+  display: block !important;
+  width: 100% !important;
+  max-width: 460px;
+  /* 반응형 자동 광고가 키워도 50px 로 고정 클립 */
+  height: 50px !important;
+  min-height: 50px;
+  max-height: 50px !important;
+  overflow: hidden;
+}
+
+/* 진출 조건 — 조별 격자 타일 */
+.group-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.gtile {
+  display: flex;
+}
+
+.gtile__btn {
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  cursor: pointer;
+  transition: transform 0.05s ease, border-color 0.15s ease;
+}
+
+/* 빙고처럼 상태별 배경색: 예정(노랑) · 성공/안전(초록) · 실패(빨강) */
+.gtile.is-swing .gtile__btn {
+  background: var(--contention-soft);
+  border-color: var(--contention-soft);
+}
+
+.gtile.is-below .gtile__btn {
+  background: var(--qualify-soft);
+  border-color: var(--qualify-soft);
+}
+
+.gtile.is-above .gtile__btn {
+  background: var(--eliminate-soft);
+  border-color: var(--eliminate-soft);
+}
+
+.gtile__xmark {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.gtile__xmark line {
+  stroke: var(--eliminate);
+  stroke-width: 5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* 통과 확정(AlwaysBelow) 카드: 큰 동그라미 표시 */
+.gtile__omark {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.gtile__omark ellipse {
+  fill: none;
+  stroke: var(--qualify);
+  stroke-width: 5;
+  vector-effect: non-scaling-stroke;
+}
+
+.gtile__btn:hover {
+  border-color: var(--border-strong);
+}
+
+.gtile__btn:active {
+  transform: scale(0.98);
+}
+
+.gtile__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 6px;
+}
+
+.gtile__group {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+  background: #ffffff;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 칩: 색칠된 카드 위에서 잘 보이도록 흰 배경 + 상태색 글자 */
+.gtile__chip {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 9px;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.gtile.is-swing .gtile__chip {
+  color: var(--contention);
+}
+
+.gtile.is-above .gtile__chip {
+  color: var(--eliminate);
+}
+
+.gtile.is-below .gtile__chip {
+  color: var(--qualify);
+}
+
+.gtile__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+}
+
+.gtile__line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.gtile__lineflags {
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: 1px;
+  flex: 0 0 auto;
+}
+
+.gtile__lineresult {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gtile.is-above .gtile__lineresult {
+  color: var(--eliminate);
+}
+
+.gtile.is-below .gtile__lineresult {
+  color: var(--text-dim);
+}
+
+/* 바텀시트 */
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(20, 30, 50, 0.45);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: sheet-fade 0.18s ease;
+}
+
+.sheet {
+  width: 100%;
+  max-width: 460px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--bg);
+  border-radius: 22px 22px 0 0;
+  padding: 8px 16px calc(20px + env(safe-area-inset-bottom, 0px));
+  animation: sheet-up 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sheet__handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-strong);
+  margin: 4px auto 10px;
+}
+
+.sheet__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.sheet__title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.sheet__close {
+  font-size: 15px;
+  color: var(--text-dim);
+  background: var(--surface-2);
+  border: none;
+  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+@keyframes sheet-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
